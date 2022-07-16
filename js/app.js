@@ -43,7 +43,6 @@
 
 // Add class 'active' to section when near top of viewport
 window.addEventListener('scroll', function (event) {
-    setActiveSection();
     let links = document.querySelectorAll('.menu__link');
 
     if (this.scrollY <= 1 * window.innerHeight) {
