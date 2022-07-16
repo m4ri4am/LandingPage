@@ -41,9 +41,36 @@
 // build the nav
 
 
-
 // Add class 'active' to section when near top of viewport
-function saveDirectory(event) {
+window.addEventListener('scroll', function (event) {
+    setActiveSection();
+    let links = document.querySelectorAll('.menu__link');
+
+    if (this.scrollY <= 1 * window.innerHeight) {
+        links[0].className += ' active__color';
+        links[1].className = ' menu__link';
+        links[2].className = ' menu__link';
+        links[3].className = ' menu__link';
+    } else if (this.scrollY <= 2 * window.innerHeight) {
+        links[0].className = ' menu__link';
+        links[1].className += ' active__color';
+        links[2].className = ' menu__link';
+        links[3].className = ' menu__link';
+    }
+    else if (this.scrollY <= 3 * window.innerHeight) {
+        links[0].className = ' menu__link';
+        links[1].className = ' menu__link';
+        links[2].className += ' active__color';
+        links[3].className = ' menu__link';
+    } else if (this.scrollY <= 4 * window.innerHeight) {
+        links[0].className = ' menu__link';
+        links[1].className = ' menu__link';
+        links[2].className = ' menu__link';
+        links[3].className += ' active__color';
+    }
+});
+
+function addClassActive(event) {
     scrollToSection();
     let links = document.querySelectorAll('.menu__link');
     for (let i = 0; i < links.length; i++) {
@@ -51,8 +78,7 @@ function saveDirectory(event) {
     }
     event.target.className += ' active__color';
 }
-buildMenu();
-
+// Scroll to section on link click
 // Scroll to anchor ID using scrollTO event
 function scrollToSection() {
     const sections = document.getElementsByClassName('tag__link');
@@ -84,8 +110,7 @@ function buildMenu() {
     sections.forEach(element => {
         const li = document.createElement('li')
         const anchor = document.createElement('a');
-        // anchor.href = '#' + element;
-        anchor.onclick = saveDirectory; 
+        anchor.onclick = addClassActive;
         anchor.className = 'tag__link';
         anchor.appendChild(li)
         li.textContent = element;
@@ -97,7 +122,8 @@ function buildMenu() {
     });
     list.appendChild(fragment);
 }
-// Scroll to section on link click
+buildMenu();
 
 // Set sections as active
+
 
