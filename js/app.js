@@ -122,7 +122,35 @@ function buildMenu() {
     list.appendChild(fragment);
 }
 buildMenu();
+// function buildDynamicMenu() {
+//     const sections = Array.from(document.getElementsByTagName("section"));
+//     const menu = document.getElementById('navbar__list');
+//     for(section of sections){
+//         console.log(section);
+//         const listItem = document.createElement('li');
+//         const listItemLink=document.createElement('a');
+//         // use the section data-nav to fill the <a> tag
+//         listItemLink.textContent = section.dataset.nav;
+//         listItem.appendChild(listItemLink);
+//         menu.appendChild(listItem);
+//       }
+// }
+// buildDynamicMenu();
 
 // Set sections as active
-
-
+function setActiveSection() {
+    const sections = document.getElementsByClassName('tag__link');
+    let el = []
+    for(let i = 0; i < sections.length; i++) {
+        el.push(document.getElementById(sections[i].textContent));
+        let rect = el[i].getBoundingClientRect(); 
+        if (rect.top <= 120 && rect.bottom >= 10) {
+            el[i].className = 'tag__link active__color';
+            el[i].style.transition = 'all 0.5s ease-in-out';
+        }else {
+            el[i].className = 'tag__link';
+        }
+    }
+    console.log(scrollY);
+}
+window.addEventListener('scroll', setActiveSection);
