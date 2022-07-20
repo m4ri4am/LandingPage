@@ -18,6 +18,19 @@
  * Great to have comments before crucial code sections within the procedure.
 */
 
+
+
+// my comments
+// Add class 'active__color' to <a> when scrolling to section or when the section is near the top of the viewport
+// add class 'active__color' to section when near top of viewport
+// Scroll to section on link click
+// Scroll to anchor ID using scrollTO event
+// Set sections as active
+// Build navigation menu from sections (dynamically)
+
+
+
+
 /**
  * Define Global Variables
  * 
@@ -43,48 +56,33 @@
 
 // Add class 'active' to section when near top of viewport
 window.addEventListener('scroll', function (event) {
-    let links = document.querySelectorAll('.menu__link');
-
-    if (this.scrollY <= 1 * window.innerHeight) {
-        links[0].className += ' active__color';
-        links[1].className = ' menu__link';
-        links[2].className = ' menu__link';
-        links[3].className = ' menu__link';
-    } else if (this.scrollY <= 2 * window.innerHeight) {
-        links[0].className = ' menu__link';
-        links[1].className += ' active__color';
-        links[2].className = ' menu__link';
-        links[3].className = ' menu__link';
+    let links = document.querySelectorAll('.menu__link'); // get all the links listed in the nav
+    let sections = document.getElementsByTagName('section'); // get all the sections
+    for (let i = 0; i < sections.length; i++) {
+    if(sections[i].className.includes('active__color')){ // if the link is active
+       links[i].className += ' active__color '; // add class 'active__color' to <a>
+    }else{
+        links[i].className = ' menu__link ' // remove class 'active__color' from <a>
     }
-    else if (this.scrollY <= 3 * window.innerHeight) {
-        links[0].className = ' menu__link';
-        links[1].className = ' menu__link';
-        links[2].className += ' active__color';
-        links[3].className = ' menu__link';
-    } else if (this.scrollY <= 4 * window.innerHeight) {
-        links[0].className = ' menu__link';
-        links[1].className = ' menu__link';
-        links[2].className = ' menu__link';
-        links[3].className += ' active__color';
-    }
+}
 });
-
+// Add class 'active__color' to <a> when near top of viewport
 function addClassActive(event) {
-    scrollToSection();
-    let links = document.querySelectorAll('.menu__link');
+    scrollToSection(); // scroll to section on link click
+    let links = document.querySelectorAll('.menu__link'); // get all the links listed in the nav
     for (let i = 0; i < links.length; i++) {
-        links[i].className = links[i].className.replace(' active__color', '');
+        links[i].className = links[i].className.replace(' active__color', ''); // remove class 'active__color' from <a> if it is not active
     }
-    event.target.className += ' active__color';
+    event.target.className += ' active__color';// add class 'active__color' to <a> if it is active
 }
 // Scroll to section on link click
-// Scroll to anchor ID using scrollTO event
+// Scroll to anchor ID using scroll TO event
 function scrollToSection() {
-    const sections = document.getElementsByClassName('tag__link');
+    const sections = document.getElementsByClassName('tag__link'); // get all the sections
     for (let i = 0; i < sections.length; i++) {
-        sections[i].addEventListener('click', function () {
-            const section = document.getElementById(sections[i].textContent);
-            window.scrollTo({
+        sections[i].addEventListener('click', function () { // add event listener to each link
+            const section = document.getElementById(sections[i].textContent); // get the section
+            window.scrollTo({ // scroll to the section
                 top: section.offsetTop,
                 behavior: 'smooth'
             });
@@ -101,11 +99,14 @@ function scrollToSection() {
  * 
 */
 
-// Build menu 
-function buildMenu() {
-    const fragment = new DocumentFragment();
+function buildDynamicMenu() {
+    const fragment = new DocumentFragment(); // create a new fragment (i use documentFragment instead of documentElement because it is faster)
+                                              // as the dom will render only once
     const list = document.querySelector('#navbar__list');
-    const sections = ['section1', 'section2', 'section3', 'section4'];
+    const sections =[];
+    for(section of document.querySelectorAll('section')){
+        sections.push(section.dataset.nav.replace(/\s+/g, '').toLowerCase());
+    }
     sections.forEach(element => {
         const li = document.createElement('li')
         const anchor = document.createElement('a');
@@ -115,42 +116,25 @@ function buildMenu() {
         li.textContent = element;
         li.className = 'menu__link';
         fragment.appendChild(anchor);
-        if (element === 'section1') {
-            li.className += ' active__color';
-        }
     });
     list.appendChild(fragment);
 }
-buildMenu();
-// function buildDynamicMenu() {
-//     const sections = Array.from(document.getElementsByTagName("section"));
-//     const menu = document.getElementById('navbar__list');
-//     for(section of sections){
-//         console.log(section);
-//         const listItem = document.createElement('li');
-//         const listItemLink=document.createElement('a');
-//         // use the section data-nav to fill the <a> tag
-//         listItemLink.textContent = section.dataset.nav;
-//         listItem.appendChild(listItemLink);
-//         menu.appendChild(listItem);
-//       }
-// }
-// buildDynamicMenu();
+buildDynamicMenu();
 
 // Set sections as active
 function setActiveSection() {
     const sections = document.getElementsByClassName('tag__link');
-    let el = []
+    let el = [];
     for(let i = 0; i < sections.length; i++) {
-        el.push(document.getElementById(sections[i].textContent));
+        el.push(document.getElementById(sections[i].textContent)); //push all the sections into an array
         let rect = el[i].getBoundingClientRect(); 
-        if (rect.top <= 120 && rect.bottom >= 10) {
-            el[i].className = 'tag__link active__color';
-            el[i].style.transition = 'all 0.5s ease-in-out';
+        if (rect.top <= 120 && rect.bottom >= 10) { // if the section is near the top of the viewport
+            el[i].className = 'tag__link active__color'; // add class 'active__color' to section
+                                                         // donot add class 'active__color' as +=active__color as it will add the class twice
+            el[i].style.transition = 'all 0.5s ease-in-out'; // with a transition of 0.5s ease-in-out
         }else {
             el[i].className = 'tag__link';
-        }
-    }
-    console.log(scrollY);
+        } 
+}
 }
 window.addEventListener('scroll', setActiveSection);
